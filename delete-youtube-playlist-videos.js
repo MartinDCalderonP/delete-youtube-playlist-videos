@@ -22,7 +22,7 @@
     }
 
     const allText = videoElement.textContent
-    const match = allText.match(/(hace\s+\d+\s+\w+|\d+\s+\w+\s+ago)/i)
+    const match = allText.match(t.datePattern)
     return match ? match[0] : ''
   }
 

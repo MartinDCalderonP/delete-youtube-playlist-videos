@@ -4,6 +4,7 @@ const translations = {
     ageMonths: (months) => `${months} months`,
     analyzing: 'Analyzing videos...',
     dateKeywords: ['ago', 'added'],
+    datePattern: /(\d+\s+\w+\s+ago)/i,
     deleteKeywords: ['remove from', 'remove', 'delete'],
     confirmMessage: (count) =>
       `Are you sure you want to delete ${count} video(s) from the playlist?\n\nThis action cannot be undone.`,
@@ -40,6 +41,7 @@ const translations = {
     ageMonths: (months) => `${months} meses`,
     analyzing: 'Analizando videos...',
     dateKeywords: ['hace', 'agregado'],
+    datePattern: /(hace\s+\d+\s+\w+)/i,
     deleteKeywords: ['eliminar de', 'eliminar'],
     confirmMessage: (count) =>
       `¿Estás seguro de que quieres eliminar ${count} video(s) de la playlist?\n\nEsta acción no se puede deshacer.`,
