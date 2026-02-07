@@ -1,5 +1,5 @@
 ;(async () => {
-  const language = 'es'
+  const language = 'en'
   const monthsOld = 5
   const delayBetweenDeletes = 1000
 
