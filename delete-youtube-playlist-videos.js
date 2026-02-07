@@ -136,11 +136,14 @@
     return true
   }
 
+  console.log('═══════════════════════════════════════')
   console.log(`🎬 ${t.scriptStart}`)
+  console.log('═══════════════════════════════════════')
   console.log(`⚙️ ${t.settings}`)
   console.log(
     `   - ${t.settingsAge}: ${monthsOld ? t.ageMonths(monthsOld) : t.ageAll}`
   )
+  console.log('═══════════════════════════════════════')
 
   console.log(`📜 ${t.loadingAll}`)
 
@@ -162,6 +165,7 @@
   window.scrollTo(0, 0)
   await sleep(1000)
 
+  console.log('═══════════════════════════════════════')
   const allVideos = Array.from(
     document.querySelectorAll('ytd-playlist-video-renderer')
   )
@@ -177,12 +181,14 @@
     .map((video) => ({ element: video, info: getVideoInfo(video) }))
     .filter(({ element }) => shouldDeleteVideo(element))
 
+  console.log('═══════════════════════════════════════')
   console.log(`📊 ${t.summary}`)
   console.log(`   - Total: ${allVideos.length}`)
   console.log(`   - ${t.videosToDelete}: ${videosToDelete.length}`)
   console.log(
     `   - ${t.videosToKeep}: ${allVideos.length - videosToDelete.length}`
   )
+  console.log('═══════════════════════════════════════')
 
   if (videosToDelete.length === 0) {
     console.log(`✨ ${t.noVideosToDelete}`)
@@ -198,13 +204,18 @@
   if (videosToDelete.length > 5) {
     console.log(`   ${t.moreVideos(videosToDelete.length - 5)}`)
   }
+  console.log('═══════════════════════════════════════')
 
   if (!confirm(t.confirmMessage(videosToDelete.length))) {
+    console.log('═══════════════════════════════════════')
     console.log(`❌ ${t.operationCanceled}`)
+    console.log('═══════════════════════════════════════')
     throw new Error(t.operationCanceled)
   }
 
+  console.log('═══════════════════════════════════════')
   console.log(`🗑️ ${t.deletingVideos}`)
+  console.log('═══════════════════════════════════════')
 
   let deletedCount = 0
   let errorCount = 0
