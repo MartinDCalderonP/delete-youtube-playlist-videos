@@ -6,7 +6,7 @@ This script allows you to delete videos from a YouTube playlist directly from th
 
 > **📁 Files:** The script consists of two files:
 >
-> - `translations.js` - Contains all text strings and keywords in English and Spanish
+> - `translations/index.js` - Contains all text strings and keywords in English and Spanish
 > - `delete-youtube-playlist-videos.js` - Main script logic
 >
 > Both files must be copied to the browser console in order (translations first, then main script).
@@ -19,6 +19,25 @@ This script allows you to delete videos from a YouTube playlist directly from th
 - ✅ Confirmation before deletion
 - ✅ Handles large playlists with automatic scrolling
 - ✅ Multilingual support (English/Spanish)
+- ✅ Unit tests for date parsing, filtering, and video metadata extraction
+- ✅ Edge-case tests for cutoff boundaries and non-parseable dates
+
+## 🧱 Project structure
+
+```
+.
+├── delete-youtube-playlist-videos.js
+├── delete-youtube-playlist-videos.test.js
+├── delete-youtube-playlist-videos.edge.test.js
+├── translations/
+│   └── index.js
+└── README.md
+```
+
+Notes:
+
+- `delete-youtube-playlist-videos.js` runs in the browser console and also exposes pure functions for Node tests.
+- Tests import translations from `./translations` (resolved to `translations/index.js`).
 
 ## 📋 Requirements
 
@@ -46,7 +65,7 @@ https://www.youtube.com/playlist?list=PLxxxxxxxxxxxxxx
 
 The script requires both files to be loaded in order:
 
-1. **First**, open the `translations.js` file
+1. **First**, open the `translations/index.js` file
    - Copy all the content (Ctrl+A / Cmd+A, then Ctrl+C / Cmd+C)
    - Paste it into the browser console
    - Press `Enter`
@@ -65,12 +84,13 @@ The script requires both files to be loaded in order:
 Before copying the script to the console, you can edit these values at the top of the `delete-youtube-playlist-videos.js` file:
 
 ```javascript
-const language = 'en'             // 'en' = English, 'es' = Spanish
-const monthsOld = 4               // Delete videos older than 4 months (null = delete all)
-const delayBetweenDeletes = 1000  // Wait time between deletions (1000ms = 1 second)
+const language = 'en' // 'en' = English, 'es' = Spanish
+const monthsOld = 4 // Delete videos older than 4 months (0 = delete all)
+const delayBetweenDeletes = 1000 // Wait time between deletions (1000ms = 1 second)
 ```
 
 **Tips:**
+
 - Match `language` with your YouTube interface language
 - Increase `delayBetweenDeletes` to 2000 or more for large playlists
 
@@ -124,6 +144,23 @@ Total videos found: 150
 - **Large playlists**: For playlists with hundreds of videos, the process may take several minutes.
 - **YouTube changes**: If YouTube updates its interface, the script may stop working.
 
+## 🧪 Testing
+
+Run all tests directly with Node's built-in test runner:
+
+```bash
+node --test
+```
+
+Current test coverage includes:
+
+- Date extraction from YouTube metadata spans and fallback text
+- Relative date parsing for English and Spanish units
+- Deletion decisions using `monthsOld` cutoff
+- Disabled filter behavior (`monthsOld = 0`)
+- Boundary behavior for exact cutoff dates
+- Fallback metadata behavior (`untitled`, `Date not found`)
+
 ## 🛠️ Troubleshooting
 
 ### The script doesn't find videos
@@ -157,7 +194,7 @@ A: The script stops. Already deleted videos won't be restored. You can run it ag
 A: Yes, as long as you have editing permissions.
 
 **Q: Can I add support for other languages?**
-A: Yes, add a new language object in `translations.js` with all required keys.
+A: Yes, add a new language object in `translations/index.js` with all required keys.
 
 ## ⚖️ Disclaimer
 
