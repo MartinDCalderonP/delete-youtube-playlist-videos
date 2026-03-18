@@ -1,4 +1,4 @@
-;(async () => {
+;(async () => { // NOSONAR: IIFE is used so the whole script runs when pasted in the console
   const language = 'en'
   const monthsOld = 5
   const delayBetweenDeletes = 1000
