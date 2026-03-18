@@ -75,3 +75,7 @@ const translations = {
     videosToKeep: 'Videos a mantener'
   }
 }
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = translations
+}
