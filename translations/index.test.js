@@ -1,7 +1,7 @@
 import test from 'node:test'
 import { match } from 'node:assert/strict'
 
-import translations from './index'
+import translations from './index.js'
 
 const testEach = ({ cases, run }) => {
   cases.forEach((testCase) => {
