@@ -96,6 +96,9 @@ const getVideoInfo = ({
   return { dateText, title }
 }
 
+const shouldLogProgress = ({ index, interval, total }) =>
+  index === 1 || index === total || index % interval === 0
+
 const shouldRunInBrowser =
   globalThis.window !== undefined &&
   typeof document !== 'undefined' &&
@@ -105,6 +108,7 @@ if (shouldRunInBrowser) {
   ;(async () => { // NOSONAR: IIFE is used so the whole script runs when pasted in the console
     const delayBetweenDeletes = 1000
     const language = 'en'
+    const progressLogInterval = 10
     const monthsOld = 5
 
     const t = translations[language]
@@ -118,7 +122,6 @@ if (shouldRunInBrowser) {
 
       if (!menuButton) {
         console.error(`❌ ${t.menuNotFound}`)
-        console.log(`   ${t.triedSelectors}`)
         return false
       }
 
@@ -137,20 +140,14 @@ if (shouldRunInBrowser) {
 
       if (!deleteButton) {
         console.error(`❌ ${t.removeNotFound}`)
-        console.log(`   ${t.optionsAvailable}`)
-        menuItems.forEach((item, idx) => {
-          console.log(`      ${idx + 1}. "${item.textContent.trim()}"`)
-        })
         document.body.click()
         await sleep(300)
         return false
       }
 
-      console.log(`   ${t.optionFound}: "${deleteButton.textContent.trim()}"`)
       deleteButton.click()
       await sleep(300)
 
-      console.log(`✅ [${index}/${total}] ${t.videoDeleted}`)
       return true
     }
 
@@ -176,8 +173,6 @@ if (shouldRunInBrowser) {
       window.scrollTo(0, lastHeight)
       await sleep(1000)
       scrollAttempts++
-      if (scrollAttempts % 5 === 0)
-        console.log(`   ${t.loading}... (${scrollAttempts})`)
     }
 
     window.scrollTo(0, 0)
@@ -228,15 +223,6 @@ if (shouldRunInBrowser) {
       throw new Error(t.noVideosToDelete)
     }
 
-    console.log(`📝 ${t.firstVideos}`)
-    videosToDelete.slice(0, 5).forEach(({ info }, index) => {
-      console.log(`   ${index + 1}. ${info.title}`)
-      console.log(`      ${info.dateText}`)
-    })
-
-    if (videosToDelete.length > 5) {
-      console.log(`   ${t.moreVideos(videosToDelete.length - 5)}`)
-    }
     console.log('═══════════════════════════════════════')
 
     if (!confirm(t.confirmMessage(videosToDelete.length))) {
@@ -255,17 +241,26 @@ if (shouldRunInBrowser) {
 
     for (let i = 0; i < videosToDelete.length; i++) {
       const { element, info } = videosToDelete[i]
+      const index = i + 1
 
-      console.log(
-        `[${i + 1}/${videosToDelete.length}] ${t.deleting}: ${info.title}`
-      )
+      if (
+        shouldLogProgress({
+          index,
+          interval: progressLogInterval,
+          total: videosToDelete.length
+        })
+      ) {
+        console.log(
+          `[${index}/${videosToDelete.length}] ${t.deleting}: ${info.title}`
+        )
+      }
 
       try {
         element.scrollIntoView({ behavior: 'smooth', block: 'center' })
         await sleep(500)
 
         const success = await deleteVideo({
-          index: i + 1,
+          index,
           total: videosToDelete.length,
           videoElement: element
         })
@@ -292,6 +287,7 @@ if (typeof module !== 'undefined' && module.exports) {
     extractDateText,
     getDateFromText,
     getVideoInfo,
+    shouldLogProgress,
     shouldDeleteVideo
   }
 }

@@ -5,6 +5,7 @@ const {
   extractDateText,
   getDateFromText,
   getVideoInfo,
+  shouldLogProgress,
   shouldDeleteVideo
 } = require('./delete-youtube-playlist-videos')
 const translations = require('./translations')
@@ -110,5 +111,17 @@ test('shouldDeleteVideo returns true when filter is disabled', () => {
     })
 
     assert.deepEqual(result, expected)
+  })
+})
+;[
+  [{ index: 1, interval: 10, total: 25 }, true],
+  [{ index: 10, interval: 10, total: 25 }, true],
+  [{ index: 13, interval: 10, total: 25 }, false],
+  [{ index: 25, interval: 10, total: 25 }, true]
+].forEach(([input, expected]) => {
+  test(`shouldLogProgress handles index ${input.index}`, () => {
+    const result = shouldLogProgress(input)
+
+    assert.equal(result, expected)
   })
 })
