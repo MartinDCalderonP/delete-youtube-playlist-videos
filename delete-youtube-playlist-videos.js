@@ -99,6 +99,39 @@ const getVideoInfo = ({
 const shouldLogProgress = ({ index, interval, total }) =>
   index === 1 || index === total || index % interval === 0
 
+const resolveLanguage = ({ fallbackLanguage, pageLanguage }) => {
+  if (!pageLanguage) return fallbackLanguage
+
+  const normalizedPageLanguage = pageLanguage.toLowerCase()
+
+  if (normalizedPageLanguage.startsWith('es')) {
+    return 'es'
+  }
+
+  if (normalizedPageLanguage.startsWith('en')) {
+    return 'en'
+  }
+
+  return fallbackLanguage
+}
+
+const resolveKeywordLanguages = ({ configuredLanguage, pageLanguage }) => {
+  if (configuredLanguage === 'both') {
+    return ['en', 'es']
+  }
+
+  if (configuredLanguage === 'auto') {
+    const detectedLanguage = resolveLanguage({
+      fallbackLanguage: 'en',
+      pageLanguage
+    })
+
+    return detectedLanguage === 'es' ? ['es'] : ['en']
+  }
+
+  return configuredLanguage === 'es' ? ['es'] : ['en']
+}
+
 const shouldRunInBrowser =
   globalThis.window !== undefined &&
   typeof document !== 'undefined' &&
@@ -107,15 +140,30 @@ const shouldRunInBrowser =
 if (shouldRunInBrowser) {
   ;(async () => { // NOSONAR - IIFE is used so the whole script runs when pasted in the console
     const delayBetweenDeletes = 1000
-    const language = 'en'
+    const messagesLanguage = 'en'
+    const menuSearchLanguage = 'both' // 'auto' | 'en' | 'es' | 'both'
+    const pageLanguage =
+      document.documentElement.lang || globalThis.navigator?.language
+    const language = resolveLanguage({
+      fallbackLanguage: messagesLanguage,
+      pageLanguage:
+        messagesLanguage === 'auto' ? pageLanguage : messagesLanguage
+    })
     const progressLogInterval = 10
     const monthsOld = 5
 
     const t = translations[language]
+    const keywordLanguages = resolveKeywordLanguages({
+      configuredLanguage: menuSearchLanguage,
+      pageLanguage
+    })
+    const deleteKeywords = keywordLanguages.flatMap(
+      (keywordLanguage) => translations[keywordLanguage].deleteKeywords
+    )
 
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
-    const deleteVideo = async ({ index, total, videoElement }) => {
+    const deleteVideo = async ({ videoElement }) => {
       const menuButton = videoElement.querySelector(
         'button[aria-label*="Menú"], button[aria-label*="Menu"], button[aria-label*="Acción"], button[aria-label*="Action"], ytd-menu-renderer button, #button[aria-label*="menú"]'
       )
@@ -133,7 +181,7 @@ if (shouldRunInBrowser) {
       )
 
       const deleteButton = [...menuItems].find((item) =>
-        t.deleteKeywords.some((keyword) =>
+        deleteKeywords.some((keyword) =>
           item.textContent.trim().toLowerCase().includes(keyword)
         )
       )
@@ -260,8 +308,6 @@ if (shouldRunInBrowser) {
         await sleep(500)
 
         const success = await deleteVideo({
-          index,
-          total: videosToDelete.length,
           videoElement: element
         })
         success ? deletedCount++ : errorCount++
@@ -287,6 +333,8 @@ if (typeof module !== 'undefined' && module.exports) {
     extractDateText,
     getDateFromText,
     getVideoInfo,
+    resolveLanguage,
+    resolveKeywordLanguages,
     shouldLogProgress,
     shouldDeleteVideo
   }

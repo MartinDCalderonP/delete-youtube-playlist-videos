@@ -5,6 +5,8 @@ const {
   extractDateText,
   getDateFromText,
   getVideoInfo,
+  resolveKeywordLanguages,
+  resolveLanguage,
   shouldLogProgress,
   shouldDeleteVideo
 } = require('./delete-youtube-playlist-videos')
@@ -123,5 +125,31 @@ test('shouldDeleteVideo returns true when filter is disabled', () => {
     const result = shouldLogProgress(input)
 
     assert.equal(result, expected)
+  })
+})
+;[
+  [{ fallbackLanguage: 'en', pageLanguage: 'es-ES' }, 'es'],
+  [{ fallbackLanguage: 'en', pageLanguage: 'en-US' }, 'en'],
+  [{ fallbackLanguage: 'en', pageLanguage: 'pt-BR' }, 'en'],
+  [{ fallbackLanguage: 'en', pageLanguage: '' }, 'en']
+].forEach(([input, expected]) => {
+  test('resolveLanguage returns expected value', () => {
+    const result = resolveLanguage(input)
+
+    assert.equal(result, expected)
+  })
+})
+;[
+  [{ configuredLanguage: 'both', pageLanguage: 'es-ES' }, ['en', 'es']],
+  [{ configuredLanguage: 'auto', pageLanguage: 'es-ES' }, ['es']],
+  [{ configuredLanguage: 'auto', pageLanguage: 'en-US' }, ['en']],
+  [{ configuredLanguage: 'auto', pageLanguage: 'pt-BR' }, ['en']],
+  [{ configuredLanguage: 'es', pageLanguage: 'en-US' }, ['es']],
+  [{ configuredLanguage: 'en', pageLanguage: 'es-ES' }, ['en']]
+].forEach(([input, expected]) => {
+  test(`resolveKeywordLanguages returns ${expected.join(',')}`, () => {
+    const result = resolveKeywordLanguages(input)
+
+    assert.deepEqual(result, expected)
   })
 })
