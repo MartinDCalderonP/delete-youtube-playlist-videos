@@ -1,7 +1,7 @@
-const test = require('node:test')
-const assert = require('node:assert/strict')
+import test from 'node:test'
+import { match } from 'node:assert/strict'
 
-const translations = require('./index')
+import translations from './index'
 
 const testEach = ({ cases, run }) => {
   cases.forEach((testCase) => {
@@ -43,6 +43,6 @@ testEach({
     const { count, expected, language } = testCase
     const message = translations[language].confirmMessage(count)
 
-    assert.match(message, expected)
+    match(message, expected)
   }
 })
