@@ -105,7 +105,7 @@ const shouldRunInBrowser =
   typeof translations !== 'undefined'
 
 if (shouldRunInBrowser) {
-  ;(async () => { // NOSONAR: IIFE is used so the whole script runs when pasted in the console
+  ;(async () => { // NOSONAR - IIFE is used so the whole script runs when pasted in the console
     const delayBetweenDeletes = 1000
     const language = 'en'
     const progressLogInterval = 10
