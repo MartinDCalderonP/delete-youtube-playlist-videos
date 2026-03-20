@@ -2,7 +2,7 @@
 
 This script allows you to delete videos from a YouTube playlist directly from the browser console, with the option to filter by date added.
 
-> **🌐 Language:** This script is in English by default. To switch to Spanish, change the `language` variable to `'es'` in the `delete-youtube-playlist-videos.js` file.
+> **🌐 Language:** You can configure message language separately from the language used to find menu options in YouTube.
 
 > **📁 Files:** The script consists of two files:
 >
@@ -84,14 +84,17 @@ The script requires both files to be loaded in order:
 Before copying the script to the console, you can edit these values at the top of the `delete-youtube-playlist-videos.js` file:
 
 ```javascript
-const language = 'en' // 'en' = English, 'es' = Spanish
+const messagesLanguage = 'en' // 'en' | 'es' | 'auto' (console output)
+const menuSearchLanguage = 'both' // 'auto' | 'en' | 'es' | 'both' (YouTube UI labels)
 const monthsOld = 4 // Delete videos older than 4 months (0 = delete all)
 const delayBetweenDeletes = 1000 // Wait time between deletions (1000ms = 1 second)
 ```
 
 **Tips:**
 
-- Match `language` with your YouTube interface language
+- Use `messagesLanguage = 'en'` and `menuSearchLanguage = 'es'` if you want English logs with Spanish YouTube UI.
+- Use `menuSearchLanguage = 'both'` if the UI language can vary.
+- Use `auto` to detect from page/browser language (`es`/`en`) with English fallback.
 - Increase `delayBetweenDeletes` to 2000 or more for large playlists
 
 ## 📊 Sample output (English)
@@ -173,6 +176,7 @@ Current test coverage includes:
 
 - Verify that you have editing permissions on the playlist
 - Try increasing `delayBetweenDeletes` to 2000 or more
+- The script now checks delete keywords in both English and Spanish menu labels
 
 ### The script doesn't detect dates correctly
 
