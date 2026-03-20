@@ -149,7 +149,7 @@ if (shouldRunInBrowser) {
       pageLanguage:
         messagesLanguage === 'auto' ? pageLanguage : messagesLanguage
     })
-    const progressLogInterval = 10
+    const progressLogInterval = 1
     const monthsOld = 5
 
     const t = translations[language]
