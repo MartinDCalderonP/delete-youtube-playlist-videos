@@ -1,3 +1,11 @@
+const SCRIPT_CONFIG = {
+  delayBetweenDeletes: 1000,
+  menuSearchLanguage: 'both', // 'auto' | 'en' | 'es' | 'both'
+  messagesLanguage: 'en',
+  monthsOld: 5,
+  progressLogInterval: 1
+}
+
 const extractDateText = ({ dateKeywords, datePattern, videoElement }) => {
   const dateElements = videoElement.querySelectorAll(
     '#video-info span, #metadata-line span'
@@ -139,9 +147,13 @@ const shouldRunInBrowser =
 
 if (shouldRunInBrowser) {
   ;(async () => { // NOSONAR - IIFE is used so the whole script runs when pasted in the console
-    const delayBetweenDeletes = 1000
-    const messagesLanguage = 'en'
-    const menuSearchLanguage = 'both' // 'auto' | 'en' | 'es' | 'both'
+    const {
+      delayBetweenDeletes,
+      menuSearchLanguage,
+      messagesLanguage,
+      monthsOld,
+      progressLogInterval
+    } = SCRIPT_CONFIG
     const pageLanguage =
       document.documentElement.lang || globalThis.navigator?.language
     const language = resolveLanguage({
@@ -149,8 +161,6 @@ if (shouldRunInBrowser) {
       pageLanguage:
         messagesLanguage === 'auto' ? pageLanguage : messagesLanguage
     })
-    const progressLogInterval = 1
-    const monthsOld = 5
 
     const t = translations[language]
     const keywordLanguages = resolveKeywordLanguages({
