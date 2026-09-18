@@ -90,6 +90,7 @@ const shouldDeleteVideo = ({
 const getVideoInfo = ({
   dateKeywords,
   datePattern,
+  monthsOld,
   untitled,
   videoElement
 }) => {
@@ -97,6 +98,11 @@ const getVideoInfo = ({
     '#video-title, h3 a, #video-title-link'
   )
   const title = titleElement ? titleElement.textContent.trim() : untitled
+
+  if (!monthsOld) {
+    return { title }
+  }
+
   const dateText =
     extractDateText({ dateKeywords, datePattern, videoElement }) ||
     'Date not found'
@@ -254,6 +260,7 @@ if (shouldRunInBrowser) {
         info: getVideoInfo({
           dateKeywords: t.dateKeywords,
           datePattern: t.datePattern,
+          monthsOld,
           untitled: t.untitled,
           videoElement: video
         })

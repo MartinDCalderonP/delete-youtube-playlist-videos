@@ -108,12 +108,38 @@ test('shouldDeleteVideo returns true when filter is disabled', () => {
     const result = getVideoInfo({
       dateKeywords,
       datePattern,
+      monthsOld: 5,
       untitled,
       videoElement
     })
 
     assert.deepEqual(result, expected)
   })
+})
+
+test('getVideoInfo skips date extraction when monthsOld is 0', () => {
+  let dateQueryCount = 0
+  const videoElement = createVideoElement({
+    spans: ['8 months ago'],
+    textContent: '8 months ago',
+    title: 'Video'
+  })
+  const originalQuerySelectorAll = videoElement.querySelectorAll
+  videoElement.querySelectorAll = () => {
+    dateQueryCount++
+    return originalQuerySelectorAll()
+  }
+
+  const result = getVideoInfo({
+    dateKeywords,
+    datePattern,
+    monthsOld: 0,
+    untitled,
+    videoElement
+  })
+
+  assert.deepEqual(result, { title: 'Video' })
+  assert.equal(dateQueryCount, 0)
 })
 ;[
   [{ index: 1, interval: 10, total: 25 }, true],
