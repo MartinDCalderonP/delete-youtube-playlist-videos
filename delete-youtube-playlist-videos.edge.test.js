@@ -80,3 +80,20 @@ test('shouldDeleteVideo handles spanish unit in text', () => {
 
   assert.equal(result, false)
 })
+
+test('shouldDeleteVideo handles spanish abbreviated months unit', () => {
+  const videoElement = createVideoElement({
+    spans: ['hace 7 m'],
+    textContent: 'hace 7 m'
+  })
+
+  const result = shouldDeleteVideo({
+    dateKeywords: translations.es.dateKeywords,
+    datePattern: translations.es.datePattern,
+    monthsOld: 5,
+    now: NOW,
+    videoElement
+  })
+
+  assert.equal(result, true)
+})

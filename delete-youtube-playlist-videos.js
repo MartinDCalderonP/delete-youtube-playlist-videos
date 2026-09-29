@@ -30,12 +30,12 @@ const getDateFromText = ({ dateText, now }) => {
     {
       getValue: (date) => date.getMonth(),
       method: 'setMonth',
-      pattern: /(mes|meses|month|months)/i
+      pattern: /\b(mes|meses|month|months|m)\b/i
     },
     {
       getValue: (date) => date.getFullYear(),
       method: 'setFullYear',
-      pattern: /(año|años|year|years)/i
+      pattern: /\b(año|años|year|years|a)\b/i
     },
     {
       getValue: (date) => date.getDate(),
