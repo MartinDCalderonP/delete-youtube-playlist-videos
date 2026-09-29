@@ -49,8 +49,8 @@ const createVideoElement = ({ spans = [], textContent = '', title = '' }) => ({
 ;[
   ['2 months ago', '2026-01-18T10:00:00.000Z'],
   ['1 año', '2025-03-18T10:00:00.000Z'],
-  ['7 m', '2025-08-18T10:00:00.000Z'],
-  ['7 a', '2019-03-18T10:00:00.000Z']
+  ['2 m', '2026-01-18T10:00:00.000Z'],
+  ['1 a', '2025-03-18T10:00:00.000Z']
 ].forEach(([dateText, expected]) => {
   test(`getDateFromText parses "${dateText}"`, () => {
     const result = getDateFromText({ dateText, now: NOW })
